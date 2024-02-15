@@ -1,4 +1,4 @@
-// ignore_for_file: unnecessary_new
+// ignore_for_file: unnecessary_new, avoid_print, file_names
 import 'package:dio/dio.dart';
 import 'package:e_form/config/api_service.dart';
 

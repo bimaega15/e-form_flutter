@@ -1,4 +1,4 @@
-// ignore_for_file: avoid_print, invalid_use_of_protected_member, must_be_immutable, unnecessary_null_comparison, non_constant_identifier_names
+// ignore_for_file: avoid_print, invalid_use_of_protected_member, must_be_immutable, unnecessary_null_comparison, non_constant_identifier_names, prefer_final_fields
 
 import 'dart:convert';
 import 'dart:io';

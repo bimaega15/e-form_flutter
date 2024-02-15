@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'package:dio/dio.dart';
 import 'package:e_form/config/app_route.dart';
 import 'package:e_form/config/utils.dart';

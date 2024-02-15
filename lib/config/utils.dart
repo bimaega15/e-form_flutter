@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'package:e_form/config/app_color.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';

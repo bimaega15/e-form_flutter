@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print, avoid_function_literals_in_foreach_calls, non_constant_identifier_names
+
 import 'package:dio/dio.dart';
 import 'package:e_form/config/app_route.dart';
 import 'package:e_form/config/utils.dart';

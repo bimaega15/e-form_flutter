@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'package:e_form/models/myProfile.dart';
 import 'package:e_form/source/ProfileSource.dart';
 import 'package:get/get.dart' hide Response;

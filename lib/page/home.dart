@@ -34,12 +34,6 @@ class _HomeState extends State<Home> {
     super.initState();
     cDashboard.getTransaksi();
     cProfile.fetchMyProfile();
-    getDirectoryPath();
-  }
-
-  void getDirectoryPath() async {
-    String path = await Utils().getDownloadPath();
-    print(['directory path', path]);
   }
 
   @override

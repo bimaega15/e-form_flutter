@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'package:e_form/controller/c_auth.dart';
 import 'package:e_form/controller/c_menubar.dart';
 import 'package:e_form/controller/c_transaksi.dart';

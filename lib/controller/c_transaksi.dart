@@ -1,4 +1,4 @@
-// ignore_for_file: await_only_futures, non_constant_identifier_names
+// ignore_for_file: await_only_futures, non_constant_identifier_names, avoid_print
 
 import 'package:e_form/controller/c_form_transaksi.dart';
 import 'package:e_form/source/TransaksiSource.dart';

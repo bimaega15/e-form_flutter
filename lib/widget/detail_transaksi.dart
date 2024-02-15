@@ -1,12 +1,10 @@
-// ignore_for_file: must_be_immutable
+// ignore_for_file: must_be_immutable, avoid_print
 
-import 'package:e_form/config/api_service.dart';
 import 'package:e_form/config/app_color.dart';
 import 'package:e_form/config/utils.dart';
 import 'package:e_form/widget/data_transaksi.dart';
 import 'package:e_form/widget/text_main.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_file_downloader/flutter_file_downloader.dart';
 
 class DetailTransaksi extends StatelessWidget {
   DetailTransaksi({
@@ -17,21 +15,12 @@ class DetailTransaksi extends StatelessWidget {
   Map<dynamic, dynamic> receivedData;
 
   void onDownload(Map<dynamic, dynamic> receivedData) async {
-    FileDownloader.downloadFile(
-        url:
-            '${ApiService.baseRoot}/upload/transaction/${receivedData['attachment']}',
-        onProgress: (name, progress) {},
-        onDownloadCompleted: (value) {
-          print('path: $value');
-          Utils().showSnackbar('success', 'Successfully',
-              'File berhasil di download lokasi: $value');
-        });
+    print('value');
   }
 
   @override
   Widget build(BuildContext context) {
     int isPpn = receivedData['ppn'];
-    print(receivedData['attachment']);
     String attachment = receivedData['attachment'];
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),

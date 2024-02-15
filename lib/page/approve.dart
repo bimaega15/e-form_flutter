@@ -1,3 +1,5 @@
+// ignore_for_file: non_constant_identifier_names, prefer_final_fields
+
 import 'package:e_form/config/app_color.dart';
 import 'package:e_form/config/helper.dart';
 import 'package:e_form/config/number_text_formatter.dart';
