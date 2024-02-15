@@ -1,5 +1,6 @@
-import 'package:e_form/config/utils.dart';
 import 'package:e_form/controller/c_auth.dart';
+import 'package:e_form/controller/c_menubar.dart';
+import 'package:e_form/controller/c_transaksi.dart';
 import 'package:e_form/source/DashboardSource.dart';
 import 'package:get/get.dart' hide Response;
 
@@ -55,13 +56,22 @@ class CDashboard extends GetxController {
           accesorRevisi: 0)
       .obs;
   RxBool isLoading = true.obs;
-  final cAuth = Get.put(CAuth());
-
-  @override
-  void onInit() {
-    super.onInit();
-    getTransaksi();
+  Rx<String> searchByNoTracking = ''.obs;
+  CTransaksi cTransaksi = Get.put(CTransaksi());
+  CMenuBar cMenuBar = Get.put(CMenuBar());
+  void setSearchByNoTracking(String value) {
+    searchByNoTracking.value = value;
+    cTransaksi.searchTransaksiText.value = value;
+    cTransaksi.search_transaksi_controller.text = value;
   }
+
+  void onSearchTracking() {
+    cTransaksi.searchTransaksi(searchByNoTracking.value);
+    cMenuBar.indexPage = 2;
+    update();
+  }
+
+  final cAuth = Get.put(CAuth());
 
   void setTransaksi(Map<String, dynamic> userData) {
     DashboardData data = DashboardData(result: userData['result']);
@@ -83,9 +93,23 @@ class CDashboard extends GetxController {
       setTransaksi(getTransaksi);
       isLoading.value = false;
     } catch (error) {
-      Utils().showSnackbar('error', 'Failed', 'Terjadi kesalahan');
+      print(error);
+      // Utils().showSnackbar('error', 'Failed', 'Terjadi kesalahan');
     }
 
     update();
+  }
+
+  void resetData() {
+    getDashboardData.value = DashboardData(result: {});
+    getStatusData.value = StatusData(
+        menunggu: 0,
+        disetujui: 0,
+        ditolak: 0,
+        accesorSetuju: 0,
+        accesorDitolak: 0,
+        accesorRevisi: 0);
+    isLoading.value = true;
+    searchByNoTracking.value = '';
   }
 }

@@ -1,4 +1,6 @@
-import 'package:e_form/controller/c_auth.dart';
+// ignore_for_file: await_only_futures
+
+import 'package:e_form/controller/c_form_transaksi.dart';
 import 'package:e_form/source/TransaksiSource.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart' hide Response;
@@ -32,7 +34,7 @@ class CTransaksi extends GetxController {
   Rx<String> searchTransaksiText = ''.obs;
   TextEditingController search_transaksi_controller = TextEditingController();
 
-  final cAuth = Get.put(CAuth());
+  CFormTransaksi cFormTransaksi = Get.put(CFormTransaksi());
 
   void fetchTransakiMenunggu() async {
     if (!hasMoreDataMenunggu.value) {
@@ -40,7 +42,6 @@ class CTransaksi extends GetxController {
     }
 
     isLoadingMenunggu(true);
-
     var result = await TransaksiSource.transaksiPagination(
         'menunggu', currentPageMenunggu, '');
     var resultData = result['result'];
@@ -48,7 +49,6 @@ class CTransaksi extends GetxController {
     isLoadingMenunggu(false);
     currentPageMenunggu++;
     hasMoreDataMenunggu(resultData['next_page_url'] != null);
-
     update();
   }
 
@@ -112,6 +112,7 @@ class CTransaksi extends GetxController {
         return;
       }
       isLoadingSemua(true);
+
       var result = await TransaksiSource.transaksiPagination(
           '', currentPageSemua, search.toString());
       var resultData = result['result'];
@@ -149,6 +150,7 @@ class CTransaksi extends GetxController {
   void searchTransaksi(String value) async {
     searchTransaksiText.value = value;
     hasMoreDataSemua(true);
+    currentPageSemua = 1;
 
     fetchTransakiSemua(value, onSearch: true);
     update();
@@ -159,14 +161,14 @@ class CTransaksi extends GetxController {
     fetchTransakiDisetujui();
     fetchTransakiDitolak();
     fetchTransakiDirevisi();
-    fetchTransakiSemua('');
+    fetchTransakiSemua(searchTransaksiText.value, onSearch: false);
   }
 
   void resetTransaksiMenunggu() {
     menungguList.clear();
     isLoadingMenunggu.value = false;
     currentPageMenunggu = 1;
-    hasMoreDataMenunggu.value = true;
+    hasMoreDataMenunggu(true);
   }
 
   void resetDisetujuiList() {
@@ -203,6 +205,5 @@ class CTransaksi extends GetxController {
     resetDitolakList();
     resetDirevisiList();
     resetSemuaList();
-    searchTransaksiText.value = '';
   }
 }

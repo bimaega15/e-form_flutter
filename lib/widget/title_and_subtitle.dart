@@ -6,18 +6,22 @@ class TitleAndSubtitle extends StatelessWidget {
   final String title;
   final String? description;
   final IconData? icon;
+  final double padding;
+  final Function()? onPressedIcon;
 
   const TitleAndSubtitle({
     super.key,
     required this.title,
     this.description,
     this.icon,
+    this.padding = 16,
+    this.onPressedIcon,
   });
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
+      padding: EdgeInsets.symmetric(horizontal: padding),
       child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
         Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -40,11 +44,13 @@ class TitleAndSubtitle extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
-              Icon(
-                icon,
-                color: AppColor.iconColor,
-                size: 25,
-              ),
+              IconButton(
+                  onPressed: onPressedIcon,
+                  icon: Icon(
+                    icon,
+                    color: AppColor.iconColor,
+                    size: 25,
+                  )),
             ],
           )
       ]),

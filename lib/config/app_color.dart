@@ -15,4 +15,10 @@ class AppColor {
   static const backgroundCard = Color(0xffF3EEEA);
   static const darkText = Color(0xff000000);
   static const greyColor = Color(0xffA9A9A9);
+
+  static const statusMenunggu = Color(0xffffffff);
+  static const statusDisetujui = Color(0xffCDFADB);
+  static const statusDitolak = Color(0xffF3D7CA);
+  static const statusDirevisi = Color(0xffC5FFF8);
+  static const statusExpired = Color(0xff944E63);
 }

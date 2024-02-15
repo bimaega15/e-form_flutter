@@ -1,3 +1,6 @@
+import 'package:e_form/config/app_route.dart';
+import 'package:e_form/config/session.dart';
+import 'package:e_form/controller/c_menubar.dart';
 import 'package:get/get.dart';
 
 class AuthData {
@@ -26,5 +29,12 @@ class CAuth extends GetxController {
       token: userData['token'],
     );
     authData.value = data;
+  }
+
+  void logout() {
+    CMenuBar cMenuBar = Get.put(CMenuBar());
+    cMenuBar.indexPage = 0;
+    Session.clearUser();
+    Get.toNamed(AppRoute.login);
   }
 }

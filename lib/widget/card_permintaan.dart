@@ -11,7 +11,7 @@ class CardPermintaan extends StatelessWidget {
     required this.qtyProduct,
     required this.priceProduct,
     required this.subTotalProduct,
-    required this.totalProduct,
+    this.totalProduct,
     required this.descriptionProduct,
     required this.currencyProduct,
     required this.currenctCurs,
@@ -21,7 +21,7 @@ class CardPermintaan extends StatelessWidget {
   final String qtyProduct;
   final int priceProduct;
   final int subTotalProduct;
-  final int totalProduct;
+  final int? totalProduct;
   final String descriptionProduct;
   final String currencyProduct;
   final String currenctCurs;
@@ -101,22 +101,23 @@ class CardPermintaan extends StatelessWidget {
                           ),
                         ],
                       ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          const TextMain(
-                            text: 'Total Harga',
-                            size: 12,
-                            textColor: AppColor.greyColor,
-                          ),
-                          TextMain(
-                            text: Utils().formatMoneyCurrency(totalProduct),
-                            size: 14,
-                            textColor: AppColor.darkText,
-                            textFontWeight: FontWeight.w500,
-                          ),
-                        ],
-                      ),
+                      if (totalProduct != null)
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            const TextMain(
+                              text: 'Total Harga',
+                              size: 12,
+                              textColor: AppColor.greyColor,
+                            ),
+                            TextMain(
+                              text: Utils().formatMoneyCurrency(totalProduct),
+                              size: 14,
+                              textColor: AppColor.darkText,
+                              textFontWeight: FontWeight.w500,
+                            ),
+                          ],
+                        ),
                     ],
                   ),
                   const Divider(

@@ -4,10 +4,16 @@ import 'package:e_form/config/app_color.dart';
 import 'package:e_form/config/app_route.dart';
 import 'package:e_form/config/session.dart';
 import 'package:e_form/controller/c_auth.dart';
+import 'package:e_form/page/approve.dart';
+import 'package:e_form/page/change_password.dart';
 import 'package:e_form/page/detail_transaction.dart';
+import 'package:e_form/page/edit_profile.dart';
+import 'package:e_form/page/filter_transaction.dart';
 import 'package:e_form/page/form_transaction.dart';
+import 'package:e_form/page/help_suppport.dart';
 import 'package:e_form/page/login.dart';
 import 'package:e_form/page/menuBar.dart';
+import 'package:e_form/page/privacy.dart';
 import 'package:e_form/page/profile.dart';
 import 'package:e_form/page/splash.dart';
 import 'package:e_form/page/transaction.dart';
@@ -68,6 +74,12 @@ class MyApp extends StatelessWidget {
         AppRoute.detail: (context) => const DetailTransaction(),
         AppRoute.formTransaction: (context) => const FormTransaction(),
         AppRoute.myProfile: (context) => const Profile(),
+        AppRoute.approve: (context) => const Approve(),
+        AppRoute.privacy: (context) => const Privacy(),
+        AppRoute.helpSupport: (context) => const HelpSupport(),
+        AppRoute.changePassword: (context) => const ChangePassword(),
+        AppRoute.editProfile: (context) => const EditProfile(),
+        AppRoute.filterTransaction: (context) => const FilterTransaction(),
       },
     );
   }

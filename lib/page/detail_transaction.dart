@@ -1,10 +1,18 @@
 // ignore_for_file: deprecated_member_use
 
 import 'package:e_form/config/app_color.dart';
+import 'package:e_form/config/app_route.dart';
+import 'package:e_form/config/helper.dart';
+import 'package:e_form/config/number_text_formatter.dart';
 import 'package:e_form/config/utils.dart';
+import 'package:e_form/controller/c_auth.dart';
+import 'package:e_form/controller/c_form_transaksi.dart';
+import 'package:e_form/controller/c_profile.dart';
 import 'package:e_form/widget/card_approvel.dart';
 import 'package:e_form/widget/card_permintaan.dart';
+import 'package:e_form/widget/data_transaksi.dart';
 import 'package:e_form/widget/detail_transaksi.dart';
+import 'package:e_form/widget/text_main.dart';
 import 'package:e_form/widget/title_and_subtitle.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -18,6 +26,9 @@ class DetailTransaction extends StatefulWidget {
 }
 
 class _DetailTransactionState extends State<DetailTransaction> {
+  CFormTransaksi cFormTransaksi = Get.put(CFormTransaksi());
+  CProfile cProfile = Get.put(CProfile());
+  CAuth cAuth = Get.put(CAuth());
   final List<String> menuTabBar = [
     'Detail Transaksi',
     'Permintaan',
@@ -52,10 +63,63 @@ class _DetailTransactionState extends State<DetailTransaction> {
     }
   }
 
+  Future<void> onDelete(id) {
+    return showDialog<void>(
+      context: context,
+      builder: (BuildContext context) {
+        return Obx(() => AlertDialog(
+              title: const TextMain(
+                text: 'Delete Confirmation',
+                textFontWeight: FontWeight.bold,
+                size: 24,
+              ),
+              content:
+                  const Text('Apakah anda yaking ingin menghapus data ini?'),
+              actions: <Widget>[
+                TextButton(
+                  style: TextButton.styleFrom(
+                    textStyle: Theme.of(context).textTheme.labelLarge,
+                  ),
+                  child: const Text('Tidak'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+                TextButton(
+                  style: TextButton.styleFrom(
+                    textStyle: Theme.of(context).textTheme.labelLarge,
+                  ),
+                  child: cFormTransaksi.isLoadingDelete.value
+                      ? const CircularProgressIndicator()
+                      : const Text('Submit'),
+                  onPressed: () {
+                    cFormTransaksi.deleteForm(id);
+                    if (!cFormTransaksi.isLoadingDelete.value) {
+                      Navigator.of(context).pop();
+                    }
+                  },
+                ),
+              ],
+            ));
+      },
+    );
+  }
+
+  Future<void> onEdit(id) async {
+    cFormTransaksi.editForm(id);
+  }
+
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
-    Map<dynamic, dynamic> receivedData = Get.arguments;
+    final receivedData = Get.arguments;
+    final overBooking = receivedData['over_booking'] ?? '';
+    final isApprove = Helper().isApprove(receivedData);
+    List<dynamic> transactionApprovelLength =
+        receivedData['transaction_approvel'];
+    bool isDelete = transactionApprovelLength.isEmpty;
+    final status = receivedData['status'];
+    bool isEdit = transactionApprovelLength.isEmpty || status == 'direvisi';
 
     return Scaffold(
       backgroundColor: AppColor.backgroundScaffold,
@@ -77,27 +141,39 @@ class _DetailTransactionState extends State<DetailTransaction> {
           },
         ),
         actions: [
-          PopupMenuButton(
-            onSelected: (value) {
-              // Handle a menu item click
-              if (value == 'edit') {
-                // Implement edit action
-              } else if (value == 'delete') {
-                // Implement delete action
-              }
-            },
-            itemBuilder: (BuildContext context) {
-              return [
-                const PopupMenuItem<String>(
-                  value: 'edit',
-                  child: Text('Edit'),
-                ),
-                const PopupMenuItem<String>(
-                  value: 'delete',
-                  child: Text('Delete'),
-                ),
-              ];
-            },
+          Visibility(
+            visible: isEdit || isDelete || isApprove,
+            child: PopupMenuButton(
+              onSelected: (value) {
+                // Handle a menu item click
+                if (value == 'edit') {
+                  onEdit(receivedData['id']);
+                } else if (value == 'delete') {
+                  onDelete(receivedData['id']);
+                } else if (value == 'approve') {
+                  Get.toNamed(AppRoute.approve, arguments: receivedData);
+                }
+              },
+              itemBuilder: (BuildContext context) {
+                return [
+                  if (isEdit)
+                    const PopupMenuItem<String>(
+                      value: 'edit',
+                      child: Text('Edit'),
+                    ),
+                  if (isDelete)
+                    const PopupMenuItem<String>(
+                      value: 'delete',
+                      child: Text('Delete'),
+                    ),
+                  if (isApprove)
+                    const PopupMenuItem<String>(
+                      value: 'approve',
+                      child: Text('Approve Pengajuan'),
+                    ),
+                ];
+              },
+            ),
           ),
         ],
         centerTitle: true,
@@ -118,24 +194,80 @@ class _DetailTransactionState extends State<DetailTransaction> {
               receivedData: receivedData,
             ),
           if (current == 1)
-            ListView.builder(
-                itemCount: receivedData['products'].length,
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                itemBuilder: (context, index) {
-                  final item = receivedData['products'][index];
-                  return CardPermintaan(
-                    nameProduct: item['name'],
-                    qtyProduct: item['qty'].toString(),
-                    priceProduct: item['price'],
-                    subTotalProduct: item['subTotal'],
-                    descriptionProduct: item['remarks'],
-                    currencyProduct: item['currency'],
-                    currenctCurs: item['curs'].toString(),
-                    totalProduct: item['totalPrice'],
-                  );
-                }),
+            Column(
+              children: [
+                if (receivedData['overbooking_transaction'] == 1)
+                  OverBookingTransactionView(overBooking),
+                if (receivedData['overbooking_transaction'] != 1)
+                  ListView.builder(
+                      itemCount: receivedData['products'].length,
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemBuilder: (context, index) {
+                        final item = receivedData['products'][index];
+                        return CardPermintaan(
+                          nameProduct: item['name'],
+                          qtyProduct: item['qty'].toString(),
+                          priceProduct: item['price'],
+                          subTotalProduct: item['subTotal'],
+                          descriptionProduct: item['remarks'],
+                          currencyProduct: item['currency'],
+                          currenctCurs: item['curs'].toString(),
+                          totalProduct: item['totalPrice'],
+                        );
+                      })
+              ],
+            ),
           if (current == 2) detailHistoryApprovel(),
+        ],
+      ),
+    );
+  }
+
+  Padding OverBookingTransactionView(Map<dynamic, dynamic> overBooking) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          DataTransaksi(
+            titleLeft: 'Jenis Over Booking',
+            answerLeft: overBooking['jenis_over_booking'],
+          ),
+          const Divider(
+            color: AppColor.borderColor,
+            thickness: 0.2,
+          ),
+          DataTransaksi(
+            titleLeft: 'Dari Rekening',
+            answerLeft: overBooking['darirekening_booking'],
+            titleRight: 'Pemilik Rekening',
+            answerRight: overBooking['pemilikrekening_booking'],
+          ),
+          const Divider(
+            color: AppColor.borderColor,
+            thickness: 0.2,
+          ),
+          DataTransaksi(
+            titleLeft: 'Tujuan Rekening',
+            answerLeft: overBooking['tujuanrekening_booking'],
+            titleRight: 'Pemilik Tujuan',
+            answerRight: overBooking['pemiliktujuan_booking'],
+          ),
+          const Divider(
+            color: AppColor.borderColor,
+            thickness: 0.2,
+          ),
+          DataTransaksi(
+            titleLeft: 'Nominal',
+            answerLeft: NumberTextInputFormatter().addThousandSeparator(
+                overBooking['nominal_booking'].toString()),
+          ),
+          const Divider(
+            color: AppColor.borderColor,
+            thickness: 0.2,
+          ),
         ],
       ),
     );
@@ -164,13 +296,18 @@ class _DetailTransactionState extends State<DetailTransaction> {
               itemBuilder: (context, index) {
                 bool lastData = index == usersApprovel.length - 1;
                 final dataApprovel = usersApprovel[index];
+                final forwardPeople = dataApprovel['forwardPeople'];
+                final forwardJabatan = dataApprovel['forwardJabatan'];
+                bool forwardRequest =
+                    forwardPeople != null && forwardJabatan != null;
                 return CardApprovel(
                     profileApprovel: dataApprovel['profileApprovel'],
                     nameApprovel: dataApprovel['requestPeople'],
                     statusApprovel: Utils()
                         .capitalizeEachWord(dataApprovel['statusTransaction']),
-                    diteruskanApprovel:
-                        'Diteruskan oleh ${dataApprovel['forwardPeople']} [${dataApprovel['forwardJabatan']}]',
+                    diteruskanApprovel: forwardRequest
+                        ? 'Diteruskan oleh ${dataApprovel['forwardPeople']} [${dataApprovel['forwardJabatan']}]'
+                        : '',
                     deskripsiApprovel: dataApprovel['keteranganApprovel'],
                     lastData: lastData);
               }),

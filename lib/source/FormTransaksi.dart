@@ -1,28 +1,74 @@
 // ignore_for_file: unnecessary_new
 import 'package:dio/dio.dart';
 import 'package:e_form/config/api_service.dart';
-import 'package:e_form/config/utils.dart';
 
 class FormTransaksiSource {
-  static Future<Map<String, dynamic>> dataStatic() async {
+  static Future dataStatic() async {
     try {
       Response transaksi = await ApiService().get(
         '/transaksi/static',
       );
       return transaksi.data;
     } catch (e) {
-      Utils().printError(e);
-      return {};
+      print(e);
     }
   }
 
-  static Future<Map<String, dynamic>> postTransaksi(dynamic data) async {
+  static Future postTransaksi(dynamic data) async {
     try {
       Response transaksi = await ApiService().post('/transaksi', data);
       return transaksi.data;
     } catch (e) {
-      Utils().printError(e);
-      return {};
+      print(e);
+    }
+  }
+
+  static Future updateTransaksi(int id, dynamic data) async {
+    try {
+      Response transaksi =
+          await ApiService().post('/transaksi/$id/update?_method=put', data);
+      return transaksi.data;
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  static deleteTransaksi(int id) async {
+    try {
+      Response transaksi =
+          await ApiService().post('/transaksi/$id/destroy?_method=delete', {});
+      return transaksi;
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  static editTransaksi(int id) async {
+    try {
+      Response transaksi = await ApiService().get('/transaksi/$id/edit');
+      return transaksi;
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  static forwardTransaction(Map<dynamic, dynamic> data) async {
+    try {
+      Response transaction =
+          await ApiService().post('/transaksi/forwardApproval', data);
+      return transaction;
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  static finishTransaction(Map<dynamic, dynamic> data) async {
+    try {
+      Response transaction =
+          await ApiService().post('/transaksi/finishApproval', data);
+      return transaction;
+    } catch (e) {
+      print(e);
     }
   }
 }

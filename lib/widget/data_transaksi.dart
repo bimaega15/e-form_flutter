@@ -32,18 +32,24 @@ class DataTransaksi extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             if (titleLeft != null)
-              TextMain(
-                textAlign: TextAlign.left,
-                text: titleLeft!,
-                textColor: AppColor.greyColor,
-                size: 12,
+              SizedBox(
+                width: MediaQuery.of(context).size.width * 0.5,
+                child: TextMain(
+                  textAlign: TextAlign.left,
+                  text: titleLeft!,
+                  textColor: AppColor.greyColor,
+                  size: 12,
+                ),
               ),
             if (answerLeft != null)
-              TextMain(
-                textAlign: TextAlign.left,
-                text: answerLeft!,
-                textColor: AppColor.darkText,
-                size: 14,
+              SizedBox(
+                width: MediaQuery.of(context).size.width * 0.5,
+                child: TextMain(
+                  textAlign: TextAlign.left,
+                  text: answerLeft!,
+                  textColor: AppColor.darkText,
+                  size: 14,
+                ),
               ),
             if (answerLeftIcon != null)
               Icon(
@@ -56,32 +62,44 @@ class DataTransaksi extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
             if (titleRight != null)
-              TextMain(
-                textAlign: TextAlign.left,
-                text: titleRight!,
-                textColor: AppColor.greyColor,
-                size: 12,
+              SizedBox(
+                width: MediaQuery.of(context).size.width * 0.4,
+                child: TextMain(
+                  textAlign: TextAlign.right,
+                  text: titleRight!,
+                  textColor: AppColor.greyColor,
+                  size: 12,
+                ),
               ),
             if (answerRight != null)
-              TextMain(
-                textAlign: TextAlign.left,
-                text: answerRight!,
-                textColor: AppColor.darkText,
-                size: 14,
+              SizedBox(
+                width: MediaQuery.of(context).size.width * 0.4,
+                child: TextMain(
+                  textAlign: TextAlign.right,
+                  text: answerRight!,
+                  textColor: AppColor.darkText,
+                  size: 14,
+                ),
               ),
             if (answerRight2 != null)
-              TextMain(
-                textAlign: TextAlign.left,
-                text: answerRight2!,
-                textColor: AppColor.darkText,
-                size: 14,
+              SizedBox(
+                width: MediaQuery.of(context).size.width * 0.4,
+                child: TextMain(
+                  textAlign: TextAlign.right,
+                  text: answerRight2!,
+                  textColor: AppColor.darkText,
+                  size: 14,
+                ),
               ),
             if (answerRight3 != null)
-              TextMain(
-                textAlign: TextAlign.left,
-                text: answerRight3!,
-                textColor: AppColor.darkText,
-                size: 14,
+              SizedBox(
+                width: MediaQuery.of(context).size.width * 0.4,
+                child: TextMain(
+                  textAlign: TextAlign.right,
+                  text: answerRight3!,
+                  textColor: AppColor.darkText,
+                  size: 14,
+                ),
               ),
           ],
         ),

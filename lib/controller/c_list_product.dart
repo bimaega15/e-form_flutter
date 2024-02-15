@@ -221,7 +221,11 @@ class CListProduct extends GetxController {
           ? (value != null && value != '')
               ? int.parse(value.replaceAll(',', ''))
               : 0
-          : value;
+          : type == 'kurs_detail'
+              ? value != null && value != ''
+                  ? double.parse(value)
+                  : 0
+              : value;
       getListProduct[index][type] = resultValue;
 
       if (type == 'price_detail') {

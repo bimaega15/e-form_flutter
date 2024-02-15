@@ -3,6 +3,7 @@
 import 'package:e_form/config/api_service.dart';
 import 'package:e_form/config/app_color.dart';
 import 'package:e_form/config/app_route.dart';
+import 'package:e_form/config/helper.dart';
 import 'package:e_form/config/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -39,7 +40,7 @@ class _ListTransactionPaginationState extends State<ListTransactionPagination> {
               child: Container(
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                    color: AppColor.backgroundCard,
+                    color: Helper().colorCard(item),
                     borderRadius: BorderRadius.circular(10),
                     boxShadow: const [
                       BoxShadow(
@@ -62,34 +63,46 @@ class _ListTransactionPaginationState extends State<ListTransactionPagination> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            item['reqBy'],
-                            style: Theme.of(context)
-                                .textTheme
-                                .titleSmall!
-                                .copyWith(
-                                  fontWeight: FontWeight.bold,
-                                ),
+                          SizedBox(
+                            width: MediaQuery.of(context).size.width * 0.4,
+                            child: Text(
+                              item['reqBy'],
+                              textAlign: TextAlign.left,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .titleSmall!
+                                  .copyWith(
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                            ),
                           ),
-                          Text(
-                            item['purposeTransaction'],
-                            style: Theme.of(context)
-                                .textTheme
-                                .titleSmall!
-                                .copyWith(
-                                    fontWeight: FontWeight.w400,
-                                    fontSize: 12,
-                                    color: AppColor.borderColor),
+                          SizedBox(
+                            width: MediaQuery.of(context).size.width * 0.4,
+                            child: Text(
+                              item['purposeTransaction'],
+                              textAlign: TextAlign.left,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .titleSmall!
+                                  .copyWith(
+                                      fontWeight: FontWeight.w400,
+                                      fontSize: 12,
+                                      color: AppColor.borderColor),
+                            ),
                           ),
-                          Text(
-                            Utils().formatDateIndo(item['reqDate']),
-                            style: Theme.of(context)
-                                .textTheme
-                                .titleSmall!
-                                .copyWith(
-                                    fontWeight: FontWeight.w400,
-                                    fontSize: 10,
-                                    color: AppColor.greyColor),
+                          SizedBox(
+                            width: MediaQuery.of(context).size.width * 0.4,
+                            child: Text(
+                              Utils().formatDateIndo(item['reqDate']),
+                              textAlign: TextAlign.left,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .titleSmall!
+                                  .copyWith(
+                                      fontWeight: FontWeight.w400,
+                                      fontSize: 10,
+                                      color: AppColor.greyColor),
+                            ),
                           ),
                         ],
                       ),
@@ -100,6 +113,7 @@ class _ListTransactionPaginationState extends State<ListTransactionPagination> {
                       children: [
                         Text(
                           (item['noReq']),
+                          textAlign: TextAlign.right,
                           style: Theme.of(context)
                               .textTheme
                               .titleSmall!
@@ -109,17 +123,18 @@ class _ListTransactionPaginationState extends State<ListTransactionPagination> {
                                   color: AppColor.mainText),
                         ),
                         Text(
-                          Utils().toTitleCase(item['purposeTransaction']),
-                          style: Theme.of(context)
-                              .textTheme
-                              .titleSmall!
-                              .copyWith(
-                                  fontWeight: FontWeight.normal,
-                                  fontSize: 10,
-                                  color: AppColor.mainText),
+                          Utils().toTitleCase(item['purposeDivisi']),
+                          textAlign: TextAlign.right,
+                          style:
+                              Theme.of(context).textTheme.titleSmall!.copyWith(
+                                    fontWeight: FontWeight.normal,
+                                    fontSize: 10,
+                                    color: AppColor.mainText,
+                                  ),
                         ),
                         Text(
                           Utils().toTitleCase(item['status']),
+                          textAlign: TextAlign.right,
                           style: Theme.of(context)
                               .textTheme
                               .titleSmall!

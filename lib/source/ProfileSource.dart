@@ -1,16 +1,44 @@
 // ignore_for_file: unnecessary_new
 import 'package:dio/dio.dart';
 import 'package:e_form/config/api_service.dart';
-import 'package:e_form/config/utils.dart';
 
 class ProfileSource {
-  static Future<Map<String, dynamic>> myProfile() async {
+  static Future myProfile() async {
     try {
       Response myProfile = await ApiService().get('/profile');
       return myProfile.data;
     } catch (e) {
-      Utils().printError(e);
-      return {};
+      print(e);
+    }
+  }
+
+  static Future changePassword(int id, Map<dynamic, dynamic> data) async {
+    try {
+      Response myProfile = await ApiService()
+          .post('/profile/$id/updatePassword?_method=put', data);
+      return myProfile;
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  static Future editProfile(int id, Map<dynamic, dynamic> data) async {
+    try {
+      Response myProfile =
+          await ApiService().post('/profile/$id?_method=put', data);
+      return myProfile;
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  static Future uploadPhoto(int id, data) async {
+    try {
+      Response myProfile =
+          await ApiService().post('/profile/$id/updateImage?_method=put', data);
+      return myProfile;
+    } catch (e) {
+      print(e);
     }
   }
 }

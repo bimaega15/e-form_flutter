@@ -30,6 +30,8 @@ class CSearchProduct extends GetxController {
   void searchSemuaProduct(String value) async {
     searchProductText.value = value;
     hasMoreData(true);
+    currentPage = 1;
+
     fetchProduksi(value, onSearch: true);
     update();
   }
@@ -56,7 +58,6 @@ class CSearchProduct extends GetxController {
           semuaProduct.addAll(resultData['data']);
         }
       }
-      isLoading(false);
       if (onSearch) {
         currentPage = 1;
         hasMoreData(resultData['next_page_url'] != null);
@@ -64,7 +65,7 @@ class CSearchProduct extends GetxController {
         currentPage++;
         hasMoreData(resultData['next_page_url'] != null);
       }
-
+      isLoading(false);
       update();
     } catch (e) {
       print(e);

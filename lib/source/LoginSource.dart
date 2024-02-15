@@ -5,7 +5,7 @@ import 'package:e_form/config/api_service.dart';
 import 'package:e_form/config/utils.dart';
 
 class LoginSource {
-  static Future<Map<String, dynamic>> signIn(
+  static Future signIn(
     String email,
     String password,
   ) async {
@@ -21,11 +21,9 @@ class LoginSource {
       } else {
         Utils().printError(response.data);
       }
-
-      return {};
     } catch (e) {
-      Utils().showSnackbar('error', 'Failed', 'Terjadi kesalahan');
-      return {};
+      print(e);
+      // Utils().showSnackbar('error', 'Failed', 'Terjadi kesalahan');
     }
   }
 }

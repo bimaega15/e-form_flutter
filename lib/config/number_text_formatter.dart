@@ -23,7 +23,11 @@ class NumberTextInputFormatter extends TextInputFormatter {
     return value;
   }
 
-  String addThousandSeparator(String value) {
+  String addThousandSeparator(String? value) {
+    if (value == null) {
+      return '';
+    }
+
     if (value.isEmpty) return value;
     int? intValue = int.tryParse(value);
     if (intValue != null) {

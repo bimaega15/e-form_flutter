@@ -23,17 +23,11 @@ class _TransactionState extends State<Transaction> {
   @override
   void initState() {
     super.initState();
-
     cTransaksi.initialData();
   }
 
   @override
   Widget build(BuildContext context) {
-    if (cFormTransaksi.isRefreshData.value) {
-      cTransaksi.resetData();
-      cTransaksi.initialData();
-      cFormTransaksi.setIsRefreshData(false);
-    }
     return Scaffold(
       backgroundColor: AppColor.backgroundScaffold,
       appBar: AppBar(
@@ -79,8 +73,9 @@ class _TransactionState extends State<Transaction> {
 
                   return NotificationListener<ScrollNotification>(
                     onNotification: (ScrollNotification scrollInfo) {
-                      if (scrollInfo.metrics.pixels ==
-                          scrollInfo.metrics.maxScrollExtent) {
+                      if (!controller.isLoadingSemua.value &&
+                          scrollInfo.metrics.pixels ==
+                              scrollInfo.metrics.maxScrollExtent) {
                         controller.fetchTransakiSemua(
                             controller.searchTransaksiText.value,
                             onSearch: false);

@@ -17,6 +17,10 @@ class TextInputWithLabel extends StatelessWidget {
     this.typeTextInputType = TextInputType.text,
     this.textInputFormatter,
     this.isError,
+    this.maxLines = 1,
+    this.obscureText = false,
+    this.onTapSuffixIcon,
+    this.heightError = 40,
   });
 
   final String label;
@@ -28,6 +32,10 @@ class TextInputWithLabel extends StatelessWidget {
   final TextInputType typeTextInputType;
   final textInputFormatter;
   final String? isError;
+  final int? maxLines;
+  final bool obscureText;
+  final Function()? onTapSuffixIcon;
+  final double? heightError;
 
   @override
   Widget build(BuildContext context) {
@@ -43,11 +51,13 @@ class TextInputWithLabel extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           TextField(
+            obscureText: obscureText,
             autofocus: true,
             textDirection: TextDirection.ltr,
             keyboardType: typeTextInputType,
             readOnly: readOnly,
             controller: controller,
+            maxLines: maxLines,
             onTap: onTap,
             onChanged: onChanged,
             inputFormatters: inputFormatters.isEmpty ? null : inputFormatters,
@@ -90,13 +100,16 @@ class TextInputWithLabel extends StatelessWidget {
               filled: true,
               fillColor: AppColor.backgroundCard,
               contentPadding:
-                  const EdgeInsetsDirectional.fromSTEB(10, 0, 10, 0),
-              suffixIcon: suffixIcon != null ? Icon(suffixIcon) : null,
+                  const EdgeInsetsDirectional.fromSTEB(16, 16, 16, 16),
+              suffixIcon: suffixIcon != null
+                  ? IconButton(
+                      onPressed: onTapSuffixIcon, icon: Icon(suffixIcon))
+                  : null,
             ),
           ),
           if (isError != null && isError != '')
             SizedBox(
-              height: 40,
+              height: heightError,
               child: TextMain(
                   text: isError!,
                   size: 12,

@@ -2,28 +2,55 @@
 
 import 'dart:io';
 
+import 'package:dio/dio.dart';
 import 'package:e_form/config/app_route.dart';
+import 'package:e_form/config/number_text_formatter.dart';
 import 'package:e_form/config/utils.dart';
+import 'package:e_form/controller/c_dashboard.dart';
 import 'package:e_form/controller/c_list_product.dart';
 import 'package:e_form/controller/c_overbooking.dart';
+import 'package:e_form/controller/c_transaksi.dart';
 import 'package:e_form/source/FormTransaksi.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart' hide Response;
 
 class CFormTransaksi extends GetxController {
   CListProduct cListProduct = Get.put(CListProduct());
   COverBooking cOverBooking = Get.put(COverBooking());
 
+  Rx<bool> is_edit = false.obs;
+  Rx<int> transaction_id = 0.obs;
   Rx<String> code_transaction = ''.obs;
-  void setCodeTransaction(String value) => code_transaction.value = value;
+  TextEditingController code_transaction_controller = TextEditingController();
+
+  void setCodeTransaction(String value) {
+    code_transaction.value = value;
+    code_transaction_controller.text = value;
+  }
 
   Rx<String> tanggal_transaction = DateTime.now().toString().split(' ')[0].obs;
-  void setTanggalTransaction(value) {
+  TextEditingController tanggal_transaction_controller = TextEditingController(
+      text: Utils()
+          .formatDateIndo(DateTime.now().toString().split(' ')[0].toString()));
+
+  void setTanggalTransaction(value, {bool edit = false}) {
     tanggal_transaction.value = value.toString().split(' ')[0];
+    if (edit) {
+      tanggal_transaction_controller.text =
+          Utils().formatDateIndo(value.toString().split(' ')[0]);
+    } else {
+      tanggal_transaction_controller.text =
+          Utils().formatDateIndo(value.toString().split(' ')[0]);
+    }
     update();
   }
 
   Rx<String> paidto_transaction = ''.obs;
-  void setPaidToTransaction(String value) => paidto_transaction.value = value;
+  TextEditingController paidto_transaction_controller = TextEditingController();
+  void setPaidToTransaction(String value) {
+    paidto_transaction.value = value;
+    paidto_transaction_controller.text = value;
+  }
 
   Rx<String> metode_pembayaran_id = ''.obs;
   void setMetodePembayaranId(String? value) {
@@ -36,13 +63,28 @@ class CFormTransaksi extends GetxController {
       paymentterms_transaction.value = value;
 
   Rx<String> expired_transaction = DateTime.now().toString().split(' ')[0].obs;
-  void setExpiredTransaction(value) {
+  TextEditingController expired_transaction_controller = TextEditingController(
+      text: Utils()
+          .formatDateIndo(DateTime.now().toString().split(' ')[0].toString()));
+  void setExpiredTransaction(value, {bool edit = false}) {
     expired_transaction.value = value.toString().split(' ')[0];
+    if (edit) {
+      expired_transaction_controller.text =
+          Utils().formatDateIndo(value.toString().split(' ')[0]);
+    } else {
+      expired_transaction_controller.text =
+          Utils().formatDateIndo(value.toString().split(' ')[0]);
+    }
     update();
   }
 
   Rx<String> purpose_transaction = ''.obs;
-  void setPuposeTransaction(String value) => purpose_transaction.value = value;
+  TextEditingController purpose_transaction_controller =
+      TextEditingController();
+  void setPuposeTransaction(String value) {
+    purpose_transaction.value = value;
+    purpose_transaction_controller.text = value;
+  }
 
   Rx<int> totalproduct_transaction = 0.obs;
   void setTotalProductTransaction(int value) =>
@@ -53,8 +95,12 @@ class CFormTransaksi extends GetxController {
       totalprice_transaction.value = value;
 
   Rx<String> purposedivisi_transaction = ''.obs;
-  void setPurposeDivisiTransaction(String value) =>
-      purposedivisi_transaction.value = value;
+  TextEditingController purposedivisi_transaction_controller =
+      TextEditingController();
+  void setPurposeDivisiTransaction(String value) {
+    purposedivisi_transaction.value = value;
+    purposedivisi_transaction_controller.text = value;
+  }
 
   Rx<bool?> isppn_transaction = false.obs;
   void setIsPpnTransaction(bool? value) {
@@ -66,7 +112,12 @@ class CFormTransaksi extends GetxController {
   }
 
   Rx<num> valueppn_transaction = 0.obs;
-  void setValuePpnTransaction(num value) => valueppn_transaction.value = value;
+  TextEditingController valueppn_transaction_controller =
+      TextEditingController();
+  void setValuePpnTransaction(num value) {
+    valueppn_transaction.value = value;
+    valueppn_transaction_controller.text = value.toString();
+  }
 
   File attachment_transaction = File('');
   void setAttachmentTransaction(File value) {
@@ -84,14 +135,26 @@ class CFormTransaksi extends GetxController {
   Rx<bool> isLoadingMetodePembayaranList = true.obs;
 
   Rx<String> nomorvirtual_transaction = ''.obs;
-  void setNomorVirtualTransaction(String value) =>
-      nomorvirtual_transaction.value = value;
+  TextEditingController nomorvirtual_transaction_controller =
+      TextEditingController();
+  void setNomorVirtualTransaction(String value) {
+    nomorvirtual_transaction.value = value;
+    nomorvirtual_transaction_controller.text = value;
+  }
 
   Rx<String> accept_transaction = ''.obs;
-  void setAcceptTransaction(String value) => accept_transaction.value = value;
+  TextEditingController accept_transaction_controller = TextEditingController();
+  void setAcceptTransaction(String value) {
+    accept_transaction.value = value;
+    accept_transaction_controller.text = value;
+  }
 
   Rx<String> bank_transaction = ''.obs;
-  void setBankTransaction(String value) => bank_transaction.value = value;
+  TextEditingController bank_transaction_controller = TextEditingController();
+  void setBankTransaction(String value) {
+    bank_transaction.value = value;
+    bank_transaction_controller.text = value;
+  }
 
   void getStaticData() async {
     final response = await FormTransaksiSource.dataStatic();
@@ -105,8 +168,6 @@ class CFormTransaksi extends GetxController {
   }
 
   Rx<bool> isLoadingSubmit = false.obs;
-  Rx<bool> isRefreshData = false.obs;
-  void setIsRefreshData(bool value) => isRefreshData.value = value;
 
   final RxMap<String, String> errorMessages = <String, String>{}.obs;
 
@@ -200,6 +261,9 @@ class CFormTransaksi extends GetxController {
   }
 
   Future<void> postTransaksi(dynamic data) async {
+    CTransaksi cTransaksi = Get.put(CTransaksi());
+    CDashboard cDashboard = Get.put(CDashboard());
+
     try {
       if (hasErros()) {
         Utils().showSnackbar(
@@ -208,8 +272,6 @@ class CFormTransaksi extends GetxController {
         isLoadingSubmit.value = true;
 
         var response = await FormTransaksiSource.postTransaksi(data);
-        isLoadingSubmit.value = false;
-        update();
 
         if (response['status'] == 400) {
           Utils().showSnackbar('error', 'Failed', response['message']);
@@ -217,15 +279,53 @@ class CFormTransaksi extends GetxController {
           Utils().showSnackbar(
               'success', 'Success', 'Berhasil menambahkan transaksi');
           await Future.delayed(const Duration(seconds: 1));
-          isRefreshData.value = true;
+          cTransaksi.resetData();
+          cDashboard.resetData();
           Get.offAllNamed(AppRoute.home);
         }
+        isLoadingSubmit.value = false;
       }
     } catch (e) {
       print(e);
       isLoadingSubmit.value = false;
-      Utils().showSnackbar('error', 'Failed', 'Terjadi kesalahan');
+      // Utils().showSnackbar('error', 'Failed', 'Terjadi kesalahan');
     }
+    update();
+  }
+
+  Future<void> updateTransaksi(dynamic data) async {
+    CTransaksi cTransaksi = Get.put(CTransaksi());
+    CDashboard cDashboard = Get.put(CDashboard());
+
+    try {
+      if (hasErros()) {
+        Utils().showSnackbar(
+            'error', 'Faiiled', 'Periksa kembali form inputan anda');
+      } else {
+        isLoadingSubmit.value = true;
+
+        var response = await FormTransaksiSource.updateTransaksi(
+            transaction_id.value, data);
+
+        if (response['status'] == 400) {
+          Utils().showSnackbar('error', 'Failed', response['message']);
+        } else {
+          Utils().showSnackbar('success', 'Success', response['message']);
+          await Future.delayed(const Duration(seconds: 1));
+          is_edit.value = false;
+          transaction_id.value = 0;
+          cTransaksi.resetData();
+          cDashboard.resetData();
+          Get.offAllNamed(AppRoute.home);
+        }
+        isLoadingSubmit.value = false;
+      }
+    } catch (e) {
+      print(e);
+      isLoadingSubmit.value = false;
+      // Utils().showSnackbar('error', 'Failed', 'Terjadi kesalahan');
+    }
+    update();
   }
 
   @override
@@ -236,26 +336,152 @@ class CFormTransaksi extends GetxController {
 
   void resetForm() {
     code_transaction.value = '';
+    code_transaction_controller.text = '';
+
     tanggal_transaction.value = DateTime.now().toString().split(' ')[0];
+    tanggal_transaction_controller.text =
+        Utils().formatDateIndo(DateTime.now().toString().split(' ')[0]);
+
     paidto_transaction.value = '';
+    paidto_transaction_controller.text = '';
+
     metode_pembayaran_id.value = '';
     paymentterms_transaction.value = 0;
     expired_transaction.value = DateTime.now().toString().split(' ')[0];
+    expired_transaction_controller.text =
+        Utils().formatDateIndo(DateTime.now().toString().split(' ')[0]);
+
     purpose_transaction.value = '';
+    purpose_transaction_controller.text = '';
+
     totalproduct_transaction.value = 0;
     totalprice_transaction.value = 0;
     purposedivisi_transaction.value = '';
+    purposedivisi_transaction_controller.text = '';
+
     isppn_transaction.value = false;
     valueppn_transaction.value = 0;
+    valueppn_transaction_controller.text = '0';
     attachment_transaction = File('');
     overbooking_transaction.value = false;
     metodePembayaranList = {}.obs;
     isLoadingMetodePembayaranList.value = true;
     nomorvirtual_transaction.value = '';
+    nomorvirtual_transaction_controller.text = '';
     accept_transaction.value = '';
+    accept_transaction_controller.text = '';
     bank_transaction.value = '';
+    bank_transaction_controller.text = '';
     isLoadingSubmit.value = false;
     getStaticData();
     update();
+  }
+
+  Rx<bool> isLoadingDelete = false.obs;
+  Future<void> deleteForm(id) async {
+    CTransaksi cTransaksi = Get.put(CTransaksi());
+    CDashboard cDashboard = Get.put(CDashboard());
+
+    try {
+      isLoadingDelete.value = true;
+      Response response = await FormTransaksiSource.deleteTransaksi(id);
+      if (response.statusCode == 200) {
+        Utils().showSnackbar('success', 'Success', response.data);
+        await Future.delayed(const Duration(seconds: 1));
+        cTransaksi.resetData();
+        cDashboard.resetData();
+        Get.offAllNamed(AppRoute.home);
+      }
+      isLoadingDelete.value = false;
+    } catch (e) {
+      print(e);
+      isLoadingDelete.value = false;
+      // Utils().showSnackbar('error', 'Failed', 'Terjadi kesalahan');
+    }
+  }
+
+  Future<void> editForm(id) async {
+    try {
+      Response response = await FormTransaksiSource.editTransaksi(id);
+      if (response.statusCode == 200) {
+        final result = response.data['result'];
+
+        is_edit.value = true;
+        transaction_id.value = id;
+
+        setCodeTransaction(result['noReq']);
+        setTanggalTransaction(DateTime.parse(result['reqDate']), edit: true);
+        setPaidToTransaction(result['paidTo']);
+        setMetodePembayaranId(result['metode_pembayaran_id'].toString());
+        setPaymentTermsTransaction(result['paymentTerms']);
+        setExpiredTransaction(DateTime.parse(result['expDate']), edit: true);
+        setPuposeTransaction(result['purposeTransaction']);
+        setTotalProductTransaction(result['totalProduct']);
+        setTotalPriceTransaction(result['totalAmount']);
+        setPurposeDivisiTransaction(result['purposeDivisi']);
+        setIsPpnTransaction(result['ppn'] == 1 ? true : false);
+        setValuePpnTransaction(result['amountPpn']);
+        setOverbookingTransaction(
+            result['overbooking_transaction'] == 1 ? true : false);
+        setNomorVirtualTransaction(result['nomorvirtual_transaction'] ?? '');
+        setAcceptTransaction(result['accept_transaction'] ?? '');
+        setBankTransaction(result['bank_transaction'] ?? '');
+        setBankTransaction(result['bank_transaction'] ?? '');
+
+        final getOverBooking = result['over_booking'];
+        cOverBooking.setJenisOverBooking(
+            getOverBooking != null ? getOverBooking['jenis_over_booking'] : '');
+        cOverBooking.setDariRekeningBooking(getOverBooking != null
+            ? getOverBooking['darirekening_booking']
+            : '');
+        cOverBooking.setPemilikRekening(getOverBooking != null
+            ? getOverBooking['pemilikrekening_booking']
+            : '');
+        cOverBooking.setTujuanRekening(getOverBooking != null
+            ? getOverBooking['tujuanrekening_booking']
+            : '');
+        cOverBooking.setPemilikTujuan(getOverBooking != null
+            ? getOverBooking['pemiliktujuan_booking']
+            : '');
+        cOverBooking.setNominalBooking(
+            NumberTextInputFormatter().addThousandSeparator(
+                getOverBooking != null
+                    ? getOverBooking['nominal_booking'].toString()
+                    : null),
+            edit: true);
+
+        List<dynamic> getProducts = result['products'];
+        for (var element in getProducts) {
+          cListProduct.getListProduct.add(ProductList(
+                  products_id: element['products_id'],
+                  code_product: element['code_product'],
+                  name_product: element['name'],
+                  capacity_product: element['capacity_product'],
+                  remarks_detail: element['remarks'],
+                  qty_detail: element['qty'],
+                  price_detail: element['price'],
+                  subtotal_detail: element['subTotal'],
+                  matauang_detail: element['currency'],
+                  kurs_detail: element['curs'])
+              .toJson);
+
+          cListProduct.remarks_detail_controller
+              .add(TextEditingController(text: element['remarks']));
+          cListProduct.qty_detail_controller.add(TextEditingController(
+              text: NumberTextInputFormatter()
+                  .addThousandSeparator(element['qty'].toString())));
+          cListProduct.price_detail_controller.add(TextEditingController(
+              text: NumberTextInputFormatter()
+                  .addThousandSeparator(element['price'].toString())));
+          cListProduct.kurs_detail_controller
+              .add(TextEditingController(text: element['curs'].toString()));
+        }
+
+        Get.toNamed(AppRoute.formTransaction);
+      }
+    } catch (e) {
+      print(e);
+      // Utils().showSnackbar('error', 'Failed', 'Terjadi kesalahan');
+    }
   }
 }

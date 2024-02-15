@@ -65,9 +65,4 @@ class LoginController extends GetxController {
           'Perhatikan kembali form inputan anda');
     }
   }
-
-  void logout() {
-    Session.clearUser();
-    Get.toNamed(AppRoute.login);
-  }
 }

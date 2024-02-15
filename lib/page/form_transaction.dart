@@ -5,7 +5,6 @@ import 'dart:io';
 
 import 'package:e_form/config/app_color.dart';
 import 'package:e_form/config/number_text_formatter.dart';
-import 'package:e_form/config/utils.dart';
 import 'package:e_form/controller/c_form_transaksi.dart';
 import 'package:e_form/controller/c_list_product.dart';
 import 'package:e_form/controller/c_overbooking.dart';
@@ -115,6 +114,7 @@ class _FormTransactionState extends State<FormTransaction> {
                       : const Text('Submit'),
                   onPressed: () {
                     formSubmit();
+
                     if (!cFormTransaksi.isLoadingSubmit.value) {
                       Navigator.of(context).pop();
                     }
@@ -131,6 +131,8 @@ class _FormTransactionState extends State<FormTransaction> {
     bool condition = true;
     if (overBooking == false) {
       condition = cListProduct.hasErros();
+    } else {
+      condition = cFormTransaksi.hasErros();
     }
     if (!cFormTransaksi.hasErros() && !condition) {
       int paymentterms_transaction = 0;
@@ -243,7 +245,11 @@ class _FormTransactionState extends State<FormTransaction> {
         pemiliktujuan_booking: cOverBooking.pemiliktujuan_booking.value,
         nominal_booking: cOverBooking.nominal_booking.value,
       );
-      cFormTransaksi.postTransaksi(transaksi.convertoFormData());
+      if (!cFormTransaksi.is_edit.value) {
+        cFormTransaksi.postTransaksi(transaksi.convertoFormData());
+      } else {
+        cFormTransaksi.updateTransaksi(transaksi.convertoFormData());
+      }
     }
   }
 
@@ -697,7 +703,8 @@ class _FormTransactionState extends State<FormTransaction> {
                     child: TextInputWithLabel(
                       label: 'Code',
                       onChanged: controller.setCodeTransaction,
-                      isError: cFormTransaksi.errorMessages['code_transaction'],
+                      isError: controller.errorMessages['code_transaction'],
+                      controller: controller.code_transaction_controller,
                     ),
                   );
                 }),
@@ -706,16 +713,14 @@ class _FormTransactionState extends State<FormTransaction> {
                 ),
                 Obx(() => Expanded(
                       child: TextInputWithLabel(
-                        controller: TextEditingController(
-                            text: Utils().formatDateIndo(
-                                controller.tanggal_transaction.value)),
+                        controller: controller.tanggal_transaction_controller,
                         label: 'Tanggal Pengajuan',
                         readOnly: true,
                         suffixIcon: Icons.calendar_today,
                         onTap: () => _selectDate(context),
                         onChanged: controller.setTanggalTransaction,
                         isError:
-                            cFormTransaksi.errorMessages['tanggal_transaction'],
+                            controller.errorMessages['tanggal_transaction'],
                       ),
                     )),
               ],
@@ -729,6 +734,7 @@ class _FormTransactionState extends State<FormTransaction> {
             child: TextInputWithLabel(
               label: 'Dibayarkan Kepada',
               onChanged: controller.setPaidToTransaction,
+              controller: controller.paidto_transaction_controller,
             ),
           ),
           const SizedBox(
@@ -749,10 +755,10 @@ class _FormTransactionState extends State<FormTransaction> {
             ),
           ),
           Obx(() {
-            if (cFormTransaksi.errorMessages['metode_pembayaran_id'] != null &&
-                cFormTransaksi.errorMessages['metode_pembayaran_id'] != '') {
+            if (controller.errorMessages['metode_pembayaran_id'] != null &&
+                controller.errorMessages['metode_pembayaran_id'] != '') {
               return TextMain(
-                  text: cFormTransaksi.errorMessages['metode_pembayaran_id']!,
+                  text: controller.errorMessages['metode_pembayaran_id']!,
                   size: 12,
                   textColor: AppColor.errorColor,
                   textFontWeight: FontWeight.w400);
@@ -771,6 +777,7 @@ class _FormTransactionState extends State<FormTransaction> {
                     child: TextInputWithLabel(
                       label: 'Rekening Penerima',
                       onChanged: controller.setAcceptTransaction,
+                      controller: controller.accept_transaction_controller,
                     ),
                   ),
                   const SizedBox(
@@ -780,6 +787,7 @@ class _FormTransactionState extends State<FormTransaction> {
                     child: TextInputWithLabel(
                       label: 'Bank Penerima',
                       onChanged: controller.setBankTransaction,
+                      controller: controller.bank_transaction_controller,
                     ),
                   ),
                 ],
@@ -792,9 +800,10 @@ class _FormTransactionState extends State<FormTransaction> {
                 children: [
                   Expanded(
                     child: TextInputWithLabel(
-                      label: 'Nomor Virtual Account',
-                      onChanged: controller.setNomorVirtualTransaction,
-                    ),
+                        label: 'Nomor Virtual Account',
+                        onChanged: controller.setNomorVirtualTransaction,
+                        controller:
+                            controller.nomorvirtual_transaction_controller),
                   ),
                   const SizedBox(
                     width: 10,
@@ -803,6 +812,7 @@ class _FormTransactionState extends State<FormTransaction> {
                     child: TextInputWithLabel(
                       label: 'Bank Penerima',
                       onChanged: controller.setBankTransaction,
+                      controller: controller.bank_transaction_controller,
                     ),
                   ),
                 ],
@@ -814,15 +824,13 @@ class _FormTransactionState extends State<FormTransaction> {
           Obx(() => Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: TextInputWithLabel(
-                  controller: TextEditingController(
-                      text: Utils().formatDateIndo(
-                          controller.expired_transaction.value)),
+                  controller: controller.expired_transaction_controller,
                   label: 'Tanggal Expired',
                   readOnly: true,
                   suffixIcon: Icons.calendar_today,
                   onTap: () => _selectDateExpired(context),
                   onChanged: controller.setExpiredTransaction,
-                  isError: cFormTransaksi.errorMessages['expired_transaction'],
+                  isError: controller.errorMessages['expired_transaction'],
                 ),
               )),
           const SizedBox(
@@ -839,7 +847,8 @@ class _FormTransactionState extends State<FormTransaction> {
                         label: 'Tujuan Transaksi',
                         onChanged: controller.setPuposeTransaction,
                         isError:
-                            cFormTransaksi.errorMessages['purpose_transaction'],
+                            controller.errorMessages['purpose_transaction'],
+                        controller: controller.purpose_transaction_controller,
                       ),
                     )),
                 const SizedBox(
@@ -849,6 +858,7 @@ class _FormTransactionState extends State<FormTransaction> {
                   child: TextInputWithLabel(
                     label: 'Purpose (Divisi)',
                     onChanged: controller.setPurposeDivisiTransaction,
+                    controller: controller.purposedivisi_transaction_controller,
                   ),
                 ),
               ],
@@ -902,8 +912,7 @@ class _FormTransactionState extends State<FormTransaction> {
                 Expanded(
                   child: TextInputWithLabel(
                     label: 'Persen (%) PPN',
-                    controller: TextEditingController(
-                        text: controller.valueppn_transaction.value.toString()),
+                    controller: controller.valueppn_transaction_controller,
                     readOnly: controller.isppn_transaction.value == false,
                     onChanged: (value) => controller.setValuePpnTransaction(
                         value != null && value != '' ? num.parse(value) : 0),
@@ -1015,6 +1024,7 @@ class Step3 extends StatelessWidget {
                     typeTextInputType: TextInputType.number,
                     isError:
                         cFormTransaksi.errorMessages['darirekening_booking'],
+                    controller: controller.darirekening_booking_controller,
                   )),
               const SizedBox(
                 height: 10,
@@ -1022,6 +1032,7 @@ class Step3 extends StatelessWidget {
               Obx(() => TextInputWithLabel(
                   label: 'Nama Pemilik Rekening',
                   onChanged: controller.setPemilikRekening,
+                  controller: controller.pemilikrekening_booking_controller,
                   isError:
                       cFormTransaksi.errorMessages['pemilikrekening_booking'])),
               const SizedBox(
@@ -1030,6 +1041,7 @@ class Step3 extends StatelessWidget {
               Obx(() => TextInputWithLabel(
                   label: 'Nomor Rekening Tujuan',
                   onChanged: controller.setTujuanRekening,
+                  controller: controller.tujuanrekening_booking_controller,
                   typeTextInputType: TextInputType.number,
                   isError:
                       cFormTransaksi.errorMessages['tujuanrekening_booking'])),
@@ -1039,6 +1051,7 @@ class Step3 extends StatelessWidget {
               Obx(() => TextInputWithLabel(
                   label: 'Nama Pemilik Rekening',
                   onChanged: controller.setPemilikTujuan,
+                  controller: controller.pemiliktujuan_booking_controller,
                   isError:
                       cFormTransaksi.errorMessages['pemiliktujuan_booking'])),
               const SizedBox(
@@ -1047,6 +1060,7 @@ class Step3 extends StatelessWidget {
               Obx(() => TextInputWithLabel(
                   label: 'Nominal Booking',
                   onChanged: controller.setNominalBooking,
+                  controller: controller.nominal_booking_controller,
                   typeTextInputType: TextInputType.number,
                   textInputFormatter: _formatter,
                   isError: cFormTransaksi.errorMessages['nominal_booking'])),

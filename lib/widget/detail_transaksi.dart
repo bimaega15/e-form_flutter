@@ -98,10 +98,6 @@ class DetailTransaksi extends StatelessWidget {
               answerLeft: 'BANK BNI',
             ),
           ),
-          const Divider(
-            color: AppColor.borderColor,
-            thickness: 0.2,
-          ),
         ],
       ),
     );

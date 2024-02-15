@@ -5,6 +5,7 @@ import 'package:e_form/config/app_color.dart';
 import 'package:e_form/config/utils.dart';
 import 'package:e_form/controller/c_auth.dart';
 import 'package:e_form/controller/c_dashboard.dart';
+import 'package:e_form/controller/c_menubar.dart';
 import 'package:e_form/controller/c_profile.dart';
 import 'package:e_form/dummy/dummyHome.dart';
 import 'package:e_form/widget/list_transaction.dart';
@@ -26,10 +27,13 @@ class _HomeState extends State<Home> {
   final cAuth = Get.put(CAuth());
   final cProfile = Get.put(CProfile());
   final cDashboard = Get.put(CDashboard());
+  CMenuBar cMenuBar = Get.put(CMenuBar());
 
   @override
   void initState() {
     super.initState();
+    cDashboard.getTransaksi();
+    cProfile.fetchMyProfile();
   }
 
   @override
@@ -46,10 +50,14 @@ class _HomeState extends State<Home> {
           const SizedBox(height: 20),
           TitleForm(dummyList: dummyList),
           const SizedBox(height: 20),
-          const TitleAndSubtitle(
+          Flexible(
+              child: TitleAndSubtitle(
             title: 'Pengajuan Terakhir',
             icon: Icons.arrow_right_alt_outlined,
-          ),
+            onPressedIcon: () {
+              cMenuBar.indexPage = 2;
+            },
+          )),
           const SizedBox(height: 10),
           const Divider(
             color: AppColor.borderColor,
@@ -142,16 +150,21 @@ class _HomeState extends State<Home> {
                           ],
                           shape: BoxShape.circle,
                         ),
-                        child: Container(
-                          width: 50,
-                          height: 50,
-                          clipBehavior: Clip.antiAlias,
-                          decoration: const BoxDecoration(
-                            shape: BoxShape.circle,
-                          ),
-                          child: Image.network(
-                            '${ApiService.baseRoot}/upload/profile/${myProfile['profile']['gambar_profile']}',
-                            fit: BoxFit.cover,
+                        child: InkWell(
+                          onTap: () {
+                            cMenuBar.indexPage = 3;
+                          },
+                          child: Container(
+                            width: 50,
+                            height: 50,
+                            clipBehavior: Clip.antiAlias,
+                            decoration: const BoxDecoration(
+                              shape: BoxShape.circle,
+                            ),
+                            child: Image.network(
+                              '${ApiService.baseRoot}/upload/profile/${myProfile['profile']['gambar_profile']}',
+                              fit: BoxFit.cover,
+                            ),
                           ),
                         ),
                       )
@@ -170,6 +183,7 @@ class _HomeState extends State<Home> {
                               borderRadius: BorderRadius.circular(30),
                               color: Colors.white),
                           child: TextField(
+                            onChanged: cDashboard.setSearchByNoTracking,
                             decoration: InputDecoration(
                               border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(30),
@@ -191,14 +205,19 @@ class _HomeState extends State<Home> {
                             child: Material(
                               color: const Color(0xff000000),
                               borderRadius: BorderRadius.circular(45),
-                              child: const SizedBox(
-                                height: 45,
-                                width: 45,
-                                child: Center(
-                                  child: Icon(
-                                    Icons.search,
-                                    color: AppColor.textColor,
-                                    size: 20,
+                              child: InkWell(
+                                onTap: () {
+                                  cDashboard.onSearchTracking();
+                                },
+                                child: const SizedBox(
+                                  height: 45,
+                                  width: 45,
+                                  child: Center(
+                                    child: Icon(
+                                      Icons.search,
+                                      color: AppColor.textColor,
+                                      size: 20,
+                                    ),
                                   ),
                                 ),
                               ),
@@ -213,5 +232,12 @@ class _HomeState extends State<Home> {
             }),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    cDashboard.resetData();
+    cProfile.resetMyProfile();
   }
 }

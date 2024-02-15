@@ -3,6 +3,7 @@
 import 'package:e_form/config/api_service.dart';
 import 'package:e_form/config/app_color.dart';
 import 'package:e_form/config/app_route.dart';
+import 'package:e_form/config/helper.dart';
 import 'package:e_form/config/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -36,7 +37,7 @@ class _ListTransactionState extends State<ListTransaction> {
               child: Container(
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                    color: AppColor.backgroundCard,
+                    color: Helper().colorCard(item),
                     borderRadius: BorderRadius.circular(10),
                     boxShadow: const [
                       BoxShadow(

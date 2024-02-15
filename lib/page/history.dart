@@ -1,6 +1,8 @@
 // ignore_for_file: invalid_use_of_protected_member
 
 import 'package:e_form/config/app_color.dart';
+import 'package:e_form/config/app_route.dart';
+import 'package:e_form/controller/c_dashboard.dart';
 import 'package:e_form/controller/c_transaksi.dart';
 import 'package:e_form/dummy/dummyHome.dart';
 import 'package:e_form/widget/list_transaction_pagination.dart';
@@ -19,6 +21,7 @@ class History extends StatefulWidget {
 
 class _HistoryState extends State<History> {
   CTransaksi cTransaksi = Get.put(CTransaksi());
+  CDashboard cDashboard = Get.put(CDashboard());
   final List<String> menuTabBar = [
     'Menunggu',
     'Disetujui',
@@ -59,6 +62,20 @@ class _HistoryState extends State<History> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    cTransaksi.initialData();
+    cDashboard.getTransaksi();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    cTransaksi.resetData();
+    cDashboard.resetData();
+  }
+
+  @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
 
@@ -88,9 +105,12 @@ class _HistoryState extends State<History> {
           const SizedBox(height: 20),
           TitleForm(dummyList: dummyList),
           const SizedBox(height: 20),
-          const TitleAndSubtitle(
+          TitleAndSubtitle(
             title: 'List History',
             icon: Icons.filter_alt_rounded,
+            onPressedIcon: () {
+              Get.toNamed(AppRoute.filterTransaction);
+            },
           ),
           const SizedBox(height: 10),
           titleTabBar(size),
