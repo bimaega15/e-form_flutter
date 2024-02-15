@@ -78,4 +78,38 @@ class Utils {
 
     return result;
   }
+
+  Map<String, String> parseDateRange(String input) {
+    // Memisahkan rentang tanggal menggunakan tanda "-" sebagai pemisah
+    List<String> dateParts = input.split(' - ');
+
+    // Menguraikan tanggal awal dan akhir menjadi bagian yang terpisah
+    List<String> startDateParts = dateParts[0].split('/');
+    List<String> endDateParts = dateParts[1].split('/');
+
+    // Mengonversi bagian tanggal ke format yang diinginkan (yyyy-mm-dd)
+    String startDate =
+        '${startDateParts[2]}-${startDateParts[1].padLeft(2, '0')}-${startDateParts[0].padLeft(2, '0')}';
+    String endDate =
+        '${endDateParts[2]}-${endDateParts[1].padLeft(2, '0')}-${endDateParts[0].padLeft(2, '0')}';
+
+    // Mengembalikan hasil dalam bentuk Map
+    return {
+      'tanggal_awal': startDate,
+      'tanggal_akhir': endDate,
+    };
+  }
+
+  String formatDateFilter(tanggalString) {
+    List<String> parts = tanggalString.split('-');
+
+    // Mengonversi bagian-bagian menjadi nilai integer
+    String tahun = (parts[0]);
+    String bulan = (parts[1]);
+    String hari = (parts[2]);
+
+    // Membuat string dengan format "dd/mm/yyyy"
+    String formattedDate = '$hari/${bulan.toString().padLeft(2, '0')}/$tahun';
+    return formattedDate;
+  }
 }

@@ -1,6 +1,7 @@
 // ignore_for_file: invalid_use_of_protected_member
 
 import 'package:e_form/config/app_color.dart';
+import 'package:e_form/config/app_route.dart';
 import 'package:e_form/controller/c_form_transaksi.dart';
 import 'package:e_form/controller/c_transaksi.dart';
 import 'package:e_form/widget/list_transaction_pagination.dart';
@@ -47,9 +48,13 @@ class _TransactionState extends State<Transaction> {
         scrollDirection: Axis.vertical,
         children: [
           const SizedBox(height: 10),
-          const TitleAndSubtitle(
+          TitleAndSubtitle(
             title: 'List Transaction',
             description: 'Berikut merupakan keseluruhan data\ntransaction',
+            icon: Icons.filter_alt_rounded,
+            onPressedIcon: () {
+              Get.toNamed(AppRoute.filterTransaction);
+            },
           ),
           const SizedBox(height: 10),
           Padding(

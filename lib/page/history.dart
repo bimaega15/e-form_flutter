@@ -22,6 +22,7 @@ class History extends StatefulWidget {
 class _HistoryState extends State<History> {
   CTransaksi cTransaksi = Get.put(CTransaksi());
   CDashboard cDashboard = Get.put(CDashboard());
+
   final List<String> menuTabBar = [
     'Menunggu',
     'Disetujui',
@@ -30,6 +31,8 @@ class _HistoryState extends State<History> {
   ];
 
   int current = 0;
+  bool isShowExpired = false;
+  String periodeTransaction = '';
 
   double changePositionedOfLine() {
     switch (current) {
@@ -105,12 +108,8 @@ class _HistoryState extends State<History> {
           const SizedBox(height: 20),
           TitleForm(dummyList: dummyList),
           const SizedBox(height: 20),
-          TitleAndSubtitle(
+          const TitleAndSubtitle(
             title: 'List History',
-            icon: Icons.filter_alt_rounded,
-            onPressedIcon: () {
-              Get.toNamed(AppRoute.filterTransaction);
-            },
           ),
           const SizedBox(height: 10),
           titleTabBar(size),

@@ -1,9 +1,10 @@
-// ignore_for_file: await_only_futures
+// ignore_for_file: await_only_futures, non_constant_identifier_names
 
 import 'package:e_form/controller/c_form_transaksi.dart';
 import 'package:e_form/source/TransaksiSource.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart' hide Response;
+import 'package:intl/intl.dart';
 
 class CTransaksi extends GetxController {
   var menungguList = [].obs;
@@ -30,6 +31,12 @@ class CTransaksi extends GetxController {
   var isLoadingSemua = false.obs;
   var currentPageSemua = 1;
   var hasMoreDataSemua = true.obs;
+
+  Rx<bool> isExpired = false.obs;
+  Rx<String> tanggalAwalFilter =
+      DateFormat('yyyy-MM-dd').format(DateTime.now()).obs;
+  Rx<String> tanggalAkhirFilter =
+      DateFormat('yyyy-MM-dd').format(DateTime.now()).obs;
 
   Rx<String> searchTransaksiText = ''.obs;
   TextEditingController search_transaksi_controller = TextEditingController();
@@ -106,7 +113,11 @@ class CTransaksi extends GetxController {
     update();
   }
 
-  void fetchTransakiSemua(String search, {bool onSearch = false}) async {
+  void fetchTransakiSemua(String search,
+      {bool onSearch = false,
+      tanggal_awal = '',
+      tanggal_akhir = '',
+      is_transaksi_expired = false}) async {
     try {
       if (!hasMoreDataSemua.value) {
         return;
@@ -114,7 +125,13 @@ class CTransaksi extends GetxController {
       isLoadingSemua(true);
 
       var result = await TransaksiSource.transaksiPagination(
-          '', currentPageSemua, search.toString());
+        '',
+        currentPageSemua,
+        search.toString(),
+        is_transaksi_expired: is_transaksi_expired,
+        tanggal_awal: tanggal_awal,
+        tanggal_akhir: tanggal_akhir,
+      );
       var resultData = result['result'];
       if (onSearch) {
         semuaList.clear();
@@ -161,7 +178,11 @@ class CTransaksi extends GetxController {
     fetchTransakiDisetujui();
     fetchTransakiDitolak();
     fetchTransakiDirevisi();
-    fetchTransakiSemua(searchTransaksiText.value, onSearch: false);
+    fetchTransakiSemua(searchTransaksiText.value,
+        onSearch: false,
+        is_transaksi_expired: isExpired.value,
+        tanggal_akhir: tanggalAkhirFilter.value,
+        tanggal_awal: tanggalAwalFilter.value);
   }
 
   void resetTransaksiMenunggu() {
@@ -205,5 +226,11 @@ class CTransaksi extends GetxController {
     resetDitolakList();
     resetDirevisiList();
     resetSemuaList();
+  }
+
+  void resetFilter() {
+    isExpired.value = false;
+    tanggalAwalFilter.value = DateFormat('yyyy-MM-dd').format(DateTime.now());
+    tanggalAkhirFilter.value = DateFormat('yyyy-MM-dd').format(DateTime.now());
   }
 }
