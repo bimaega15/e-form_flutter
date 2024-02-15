@@ -1,7 +1,6 @@
 // ignore_for_file: invalid_use_of_protected_member
 
 import 'package:e_form/config/app_color.dart';
-import 'package:e_form/config/app_route.dart';
 import 'package:e_form/controller/c_dashboard.dart';
 import 'package:e_form/controller/c_transaksi.dart';
 import 'package:e_form/dummy/dummyHome.dart';
