@@ -2,6 +2,8 @@ import 'package:e_form/config/app_color.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:dio/dio.dart';
+import 'package:path_provider/path_provider.dart';
 
 class Utils {
   double widthMobileUI = 393;
@@ -111,5 +113,20 @@ class Utils {
     // Membuat string dengan format "dd/mm/yyyy"
     String formattedDate = '$hari/${bulan.toString().padLeft(2, '0')}/$tahun';
     return formattedDate;
+  }
+
+  Future<String> getDownloadPath() async {
+    final directory = await getApplicationDocumentsDirectory();
+    return directory.path;
+  }
+
+  Future<void> downloadFile(String fileUrl, String savePath) async {
+    Dio dio = Dio();
+    try {
+      await dio.download(fileUrl, savePath);
+      print('File telah diunduh ke: $savePath');
+    } catch (e) {
+      print('Gagal mengunduh file: $e');
+    }
   }
 }
