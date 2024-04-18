@@ -1,5 +1,7 @@
 // ignore_for_file: avoid_print
 
+import 'dart:io';
+
 import 'package:e_form/config/app_color.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -118,17 +120,33 @@ class Utils {
   }
 
   Future<String> getDownloadPath() async {
-    final directory = await getApplicationDocumentsDirectory();
-    return directory.path;
+    String directory;
+    if (Platform.isIOS) {
+      directory = (await getDownloadsDirectory())?.path ??
+          (await getTemporaryDirectory()).path;
+    } else {
+      directory = '/storage/emulated/0/Download/';
+      var dirDownloadExists = true;
+      dirDownloadExists = await Directory(directory).exists();
+      if (!dirDownloadExists) {
+        directory = '/storage/emulated/0/Downloads/';
+        dirDownloadExists = await Directory(directory).exists();
+        if (!dirDownloadExists) {
+          directory = (await getTemporaryDirectory()).path;
+        }
+      }
+    }
+    return directory;
   }
 
-  Future<void> downloadFile(String fileUrl, String savePath) async {
+  Future<bool> downloadFile(String fileUrl, String savePath) async {
     Dio dio = Dio();
     try {
       await dio.download(fileUrl, savePath);
-      print('File telah diunduh ke: $savePath');
+      return true;
     } catch (e) {
       print('Gagal mengunduh file: $e');
+      return false;
     }
   }
 }

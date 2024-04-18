@@ -9,9 +9,9 @@ import 'package:get/get.dart' hide Response;
 
 class ApiService {
   static const String baseUrl =
-      "https://9806-2400-9800-630-8395-6cdc-4a52-f84f-390b.ngrok-free.app/e_form/public/api";
+      "https://9537-2400-9800-5d0-6ab-d18-5258-8ac8-4a02.ngrok-free.app/e_form/public/api";
   static const String baseRoot =
-      "https://9806-2400-9800-630-8395-6cdc-4a52-f84f-390b.ngrok-free.app/e_form/public";
+      "https://9537-2400-9800-5d0-6ab-d18-5258-8ac8-4a02.ngrok-free.app/e_form/public";
   CAuth cAuth = Get.put(CAuth());
 
   Dio _dio = Dio();

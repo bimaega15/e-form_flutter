@@ -1,5 +1,6 @@
 // ignore_for_file: must_be_immutable, avoid_print
 
+import 'package:e_form/config/api_service.dart';
 import 'package:e_form/config/app_color.dart';
 import 'package:e_form/config/utils.dart';
 import 'package:e_form/widget/data_transaksi.dart';
@@ -15,7 +16,17 @@ class DetailTransaksi extends StatelessWidget {
   Map<dynamic, dynamic> receivedData;
 
   void onDownload(Map<dynamic, dynamic> receivedData) async {
-    print('value');
+    String attachment = receivedData['attachment'];
+    String path = await Utils().getDownloadPath();
+    bool download = await Utils().downloadFile(
+        '${ApiService.baseRoot}/upload/transaction/$attachment',
+        '$path/$attachment');
+    if (download) {
+      Utils().showSnackbar('success', 'Successfully',
+          'Berhasil download file: $path$attachment');
+    } else {
+      Utils().showSnackbar('error', 'Failed', 'Gagal download file');
+    }
   }
 
   @override
