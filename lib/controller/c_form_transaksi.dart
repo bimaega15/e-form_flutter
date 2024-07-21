@@ -416,11 +416,11 @@ class CFormTransaksi extends GetxController {
         setPaymentTermsTransaction(result['paymentTerms']);
         setExpiredTransaction(DateTime.parse(result['expDate']), edit: true);
         setPuposeTransaction(result['purposeTransaction']);
-        setTotalProductTransaction(result['totalProduct']);
-        setTotalPriceTransaction(result['totalAmount']);
-        setPurposeDivisiTransaction(result['purposeDivisi']);
+        setTotalProductTransaction(result['totalProduct'] ?? 0);
+        setTotalPriceTransaction(result['totalAmount'] ?? 0);
+        setPurposeDivisiTransaction(result['purposeDivisi'] ?? '-');
         setIsPpnTransaction(result['ppn'] == 1 ? true : false);
-        setValuePpnTransaction(result['amountPpn']);
+        setValuePpnTransaction(result['amountPpn'] ?? 0);
         setOverbookingTransaction(
             result['overbooking_transaction'] == 1 ? true : false);
         setNomorVirtualTransaction(result['nomorvirtual_transaction'] ?? '');
@@ -451,6 +451,7 @@ class CFormTransaksi extends GetxController {
             edit: true);
 
         List<dynamic> getProducts = result['products'];
+        print(getProducts);
         for (var element in getProducts) {
           cListProduct.getListProduct.add(ProductList(
                   products_id: element['products_id'],

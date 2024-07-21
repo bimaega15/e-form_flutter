@@ -12,8 +12,8 @@ import 'package:path_provider/path_provider.dart';
 class Utils {
   double widthMobileUI = 393;
   double heightMobileUI = 852;
-  String baseApi = 'http://172.23.192.1/e_form/public/api';
-  String baseRoot = 'http://172.23.192.1/e_form/public';
+  String baseApi = 'http://192.168.132.227/e_form/public/api';
+  String baseRoot = 'http://192.168.132.227/e_form/public';
 
   double calculateResponsiveWidth(double width, BuildContext context) {
     return (MediaQuery.of(context).size.width * width) / widthMobileUI;

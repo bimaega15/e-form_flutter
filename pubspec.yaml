@@ -95,11 +95,11 @@ flutter:
 
   assets:
     - assets/images/
-    - assets/videos/
-    - assets/audios/
-    - assets/lottie_animations/
-    - assets/rive_animations/
-    - assets/pdfs/
+    # - assets/videos/
+    # - assets/audios/
+    # - assets/lottie_animations/
+    # - assets/rive_animations/
+    # - assets/pdfs/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

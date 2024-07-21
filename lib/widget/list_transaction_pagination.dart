@@ -30,7 +30,19 @@ class _ListTransactionPaginationState extends State<ListTransactionPagination> {
       child: ListView.builder(
         itemCount: widget.dataTransaction.length,
         itemBuilder: (context, index) {
+          if (widget.dataTransaction.isEmpty) {
+            return Container();
+          }
+
           final item = widget.dataTransaction[index];
+          final gambarProfile = item["gambarProfile"] ?? "-";
+          final reqBy = item["reqBy"] ?? "-";
+          final purposeTransaction = item["purposeTransaction"] ?? "-";
+          final reqDate = item["reqDate"] ?? DateTime.now();
+          final noReq = item["noReq"] ?? "-";
+          final purposeDivisi = item["purposeDivisi"] ?? "-";
+          final status = item["status"] ?? "-";
+
           return InkWell(
             onTap: () {
               Get.toNamed(AppRoute.detail, arguments: item);
@@ -55,7 +67,7 @@ class _ListTransactionPaginationState extends State<ListTransactionPagination> {
                       child: CircleAvatar(
                         radius: 25.0,
                         backgroundImage: NetworkImage(
-                            '${ApiService.baseRoot}/upload/profile/${item['gambarProfile']}'),
+                            '${ApiService.baseRoot}/upload/profile/$gambarProfile'),
                       ),
                     ),
                     Padding(
@@ -66,7 +78,7 @@ class _ListTransactionPaginationState extends State<ListTransactionPagination> {
                           SizedBox(
                             width: MediaQuery.of(context).size.width * 0.4,
                             child: Text(
-                              item['reqBy'],
+                              reqBy,
                               textAlign: TextAlign.left,
                               style: Theme.of(context)
                                   .textTheme
@@ -79,7 +91,7 @@ class _ListTransactionPaginationState extends State<ListTransactionPagination> {
                           SizedBox(
                             width: MediaQuery.of(context).size.width * 0.4,
                             child: Text(
-                              item['purposeTransaction'],
+                              purposeTransaction,
                               textAlign: TextAlign.left,
                               style: Theme.of(context)
                                   .textTheme
@@ -93,7 +105,7 @@ class _ListTransactionPaginationState extends State<ListTransactionPagination> {
                           SizedBox(
                             width: MediaQuery.of(context).size.width * 0.4,
                             child: Text(
-                              Utils().formatDateIndo(item['reqDate']),
+                              Utils().formatDateIndo(reqDate),
                               textAlign: TextAlign.left,
                               style: Theme.of(context)
                                   .textTheme
@@ -112,7 +124,7 @@ class _ListTransactionPaginationState extends State<ListTransactionPagination> {
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
                         Text(
-                          (item['noReq']),
+                          noReq,
                           textAlign: TextAlign.right,
                           style: Theme.of(context)
                               .textTheme
@@ -123,7 +135,7 @@ class _ListTransactionPaginationState extends State<ListTransactionPagination> {
                                   color: AppColor.mainText),
                         ),
                         Text(
-                          Utils().toTitleCase(item['purposeDivisi']),
+                          Utils().toTitleCase(purposeDivisi),
                           textAlign: TextAlign.right,
                           style:
                               Theme.of(context).textTheme.titleSmall!.copyWith(
@@ -133,7 +145,7 @@ class _ListTransactionPaginationState extends State<ListTransactionPagination> {
                                   ),
                         ),
                         Text(
-                          Utils().toTitleCase(item['status']),
+                          Utils().toTitleCase(status),
                           textAlign: TextAlign.right,
                           style: Theme.of(context)
                               .textTheme

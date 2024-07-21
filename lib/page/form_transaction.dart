@@ -486,7 +486,7 @@ class _FormTransactionState extends State<FormTransaction> {
             init: CListProduct(),
             builder: (controller) {
               return SizedBox(
-                height: 400,
+                height: 350,
                 child: ListView.builder(
                     scrollDirection: Axis.vertical,
                     reverse: true,
