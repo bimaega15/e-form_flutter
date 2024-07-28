@@ -28,6 +28,11 @@ class _MenuBarPageState extends State<MenuBarPage> {
   ];
 
   @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Obx(() {

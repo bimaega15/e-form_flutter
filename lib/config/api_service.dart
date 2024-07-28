@@ -8,8 +8,8 @@ import 'package:e_form/controller/c_auth.dart';
 import 'package:get/get.dart' hide Response;
 
 class ApiService {
-  static const String baseUrl = "http://192.168.132.227/e_form/public/api";
-  static const String baseRoot = "http://192.168.132.227/e_form/public";
+  static const String baseUrl = "http://192.168.6.227/e_form/public/api";
+  static const String baseRoot = "http://192.168.6.227/e_form/public";
   CAuth cAuth = Get.put(CAuth());
 
   Dio _dio = Dio();

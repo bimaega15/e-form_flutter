@@ -5,6 +5,7 @@ import 'package:e_form/config/session.dart';
 import 'package:e_form/config/utils.dart';
 import 'package:e_form/models/user.dart';
 import 'package:e_form/source/LoginSource.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:get/get.dart' hide Response;
 
 class LoginController extends GetxController {
@@ -50,8 +51,10 @@ class LoginController extends GetxController {
   void login() async {
     if (!hasErros()) {
       try {
+        final fcmToken = await FirebaseMessaging.instance.getToken();
+        print('FCM Token: $fcmToken');
         Map<dynamic, dynamic> responseData =
-            await LoginSource.signIn(email.value, password.value);
+            await LoginSource.signIn(email.value, password.value, fcmToken);
         ResponseLogin responseLogin =
             ResponseLogin.fromJson(responseData['result']);
 

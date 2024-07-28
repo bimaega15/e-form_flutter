@@ -37,9 +37,11 @@ class Session {
   static Future<bool> clearUser() async {
     final pref = await SharedPreferences.getInstance();
     bool success = await pref.remove('auth');
+
     final cAuth = Get.put(CAuth());
     Map<dynamic, dynamic> userData = {"users": {}, "roles": {}, "token": ""};
     cAuth.setUser(userData);
+
     return success;
   }
 }

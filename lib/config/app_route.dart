@@ -12,4 +12,5 @@ class AppRoute {
   static const changePassword = '/changePassword';
   static const editProfile = '/editProfile';
   static const filterTransaction = '/filterTransaction';
+  static const notifikasi = '/notifikasi';
 }

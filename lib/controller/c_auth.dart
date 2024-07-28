@@ -1,6 +1,10 @@
+// ignore_for_file: avoid_print
+
 import 'package:e_form/config/app_route.dart';
 import 'package:e_form/config/session.dart';
 import 'package:e_form/controller/c_menubar.dart';
+import 'package:e_form/source/LoginSource.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:get/get.dart';
 
 class AuthData {
@@ -31,9 +35,15 @@ class CAuth extends GetxController {
     authData.value = data;
   }
 
-  void logout() {
+  void logout() async {
     CMenuBar cMenuBar = Get.put(CMenuBar());
     cMenuBar.indexPage = 0;
+    final fcmToken = await FirebaseMessaging.instance.getToken();
+    print('FCM Token logout: $fcmToken');
+    if (fcmToken != null) {
+      await LoginSource.systemLogout(fcmToken);
+    }
+
     Session.clearUser();
     Get.toNamed(AppRoute.login);
   }

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1022309641206",
+    "project_id": "eform-3c473",
+    "storage_bucket": "eform-3c473.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1022309641206:android:1273d1dba4895d679a75d7",
+        "android_client_info": {
+          "package_name": "com.example.e_form"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBnvyfwprFXsUjozGnpHcIL8VKE320HjP4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

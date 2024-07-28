@@ -6,6 +6,7 @@ import 'package:e_form/config/utils.dart';
 import 'package:e_form/controller/c_auth.dart';
 import 'package:e_form/controller/c_dashboard.dart';
 import 'package:e_form/controller/c_menubar.dart';
+import 'package:e_form/controller/c_notifikasi.dart';
 import 'package:e_form/controller/c_profile.dart';
 import 'package:e_form/dummy/dummyHome.dart';
 import 'package:e_form/widget/list_transaction.dart';
@@ -14,6 +15,7 @@ import 'package:e_form/widget/title_form.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart' hide Response;
 import 'package:google_fonts/google_fonts.dart';
+import 'package:e_form/config/app_route.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -28,12 +30,14 @@ class _HomeState extends State<Home> {
   final cProfile = Get.put(CProfile());
   final cDashboard = Get.put(CDashboard());
   CMenuBar cMenuBar = Get.put(CMenuBar());
+  CNotifikasi cNotifikasi = Get.put(CNotifikasi());
 
   @override
   void initState() {
     super.initState();
     cDashboard.getTransaksi();
     cProfile.fetchMyProfile();
+    cNotifikasi.loadNotificationsFromPrefs();
   }
 
   @override
@@ -119,14 +123,54 @@ class _HomeState extends State<Home> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            'Hi ${myProfile['name']}',
-                            style: GoogleFonts.sen(
-                                textStyle: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                            )),
+                          Row(
+                            children: [
+                              Text(
+                                'Hi ${myProfile['name']}',
+                                style: GoogleFonts.sen(
+                                    textStyle: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                )),
+                              ),
+                              const SizedBox(width: 5),
+                              GestureDetector(
+                                onTap: () {
+                                  Get.toNamed(AppRoute.notifikasi);
+                                },
+                                child: Stack(
+                                  children: [
+                                    const Icon(
+                                      Icons.notifications,
+                                      color: Colors.white,
+                                    ),
+                                    Positioned(
+                                      right: 0,
+                                      top: -2.5,
+                                      child: Container(
+                                        padding: const EdgeInsets.all(4),
+                                        decoration: const BoxDecoration(
+                                          color: Colors.red,
+                                          shape: BoxShape.circle,
+                                        ),
+                                        child: Obx(
+                                          () => Text(
+                                            cNotifikasi
+                                                .getNotificationCount()
+                                                .toString(),
+                                            style: const TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 10,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              )
+                            ],
                           ),
                           Text(
                             'Buat pengajuanmu \nmenjadi lebih mudah',
@@ -152,20 +196,18 @@ class _HomeState extends State<Home> {
                         ),
                         child: InkWell(
                           onTap: () {
-                            cMenuBar.indexPage = 3;
+                            Get.toNamed(AppRoute.notifikasi);
                           },
                           child: Container(
-                            width: 50,
-                            height: 50,
-                            clipBehavior: Clip.antiAlias,
-                            decoration: const BoxDecoration(
-                              shape: BoxShape.circle,
-                            ),
-                            child: Image.network(
-                              '${ApiService.baseRoot}/upload/profile/${myProfile['profile']['gambar_profile']}',
-                              fit: BoxFit.cover,
-                            ),
-                          ),
+                              width: 50,
+                              height: 50,
+                              clipBehavior: Clip.antiAlias,
+                              decoration: const BoxDecoration(
+                                shape: BoxShape.circle,
+                              ),
+                              child: Image.network(
+                                '${ApiService.baseRoot}/upload/profile/${myProfile['profile'] != null ? myProfile['profile']['gambar_profile'] ?? 'default.png' : 'default.png'}',
+                              )),
                         ),
                       )
                     ],
@@ -239,5 +281,6 @@ class _HomeState extends State<Home> {
     super.dispose();
     cDashboard.resetData();
     cProfile.resetMyProfile();
+    cNotifikasi.clearNotifications();
   }
 }
